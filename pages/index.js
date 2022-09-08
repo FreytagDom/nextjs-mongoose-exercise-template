@@ -3,14 +3,34 @@
  * `getServerSideProps`!
  */
 
-export default function IndexPage() {
+import { getAllQuestions } from "../services/questionService";
+import QuestionCard from "../src/QuestionCard";
+
+export async function getServerSideProps() {
+  const questions = await getAllQuestions();
+  console.log(questions);
+  return {
+    props: {
+      questions: questions,
+    },
+  };
+}
+
+export default function IndexPage({ questions }) {
   return (
     <main>
       <h1>All questions</h1>
       <ul>
-        {/*
-        Questions should be rendered here.
-        */}
+        {questions.map(({ question, answer, options, id }) => {
+          return (
+            <QuestionCard
+              key={id}
+              question={question}
+              answer={answer}
+              options={options}
+            />
+          );
+        })}
       </ul>
     </main>
   );
